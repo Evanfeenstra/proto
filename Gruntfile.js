@@ -1,0 +1,114 @@
+/*global module:false*/
+module.exports = function(grunt) {
+
+  var autoprefixer = require('autoprefixer-core');
+
+  // Project configuration.
+  grunt.initConfig({
+    // Metadata.
+    meta: {
+      version: '0.1.0'
+    },
+    banner: "",
+    // Task configuration.
+    concat: {
+      options: {
+        banner: '<%= banner %>',
+        stripBanners: true
+      },
+      dist: {
+        src: ['src/js/*.js'],
+        dest: 'dist/js/main.min.js'
+      }
+    },
+    uglify: {
+      options: {
+        banner: '<%= banner %>'
+      },
+      dist: {
+        src: '<%= concat.dist.dest %>',
+        dest: 'dist/js/main.min.js'
+      }
+    },
+    imagemin: {
+      dist: {
+        options: {
+          optimizationLevel: 5
+        },
+        files: [{
+           expand: true,
+           cwd: 'src/images',
+           src: ['**/*.{png,jpg,gif}'],
+           dest: 'dist/images'
+        }]
+      }
+    },
+    cssmin: {
+       dist: {
+          options: {
+             banner: ''
+          },
+          files: {
+             'dist/css/style.min.css': ['src/css/**/*.css']
+          }
+      }
+    },
+    postcss: {
+        options: {
+            map: true,
+            processors: [
+                require('autoprefixer-core')({
+                    browsers: ['last 2 versions']
+                })
+            ]
+        },
+        dist: {
+            src: 'dist/css/*.css'
+        }
+    },
+    processhtml: {
+      build:{
+        options: {
+          process: true,
+        },
+        files: [
+          {
+            expand: true,     
+            cwd: 'src/',   
+            src: ['**/*.html'],
+            dest: 'dist/',  
+            ext: '.html'
+          },
+        ],
+      }, 
+    },
+    htmlmin: {
+       dist: {
+          options: {
+             removeComments: true,
+             collapseWhitespace: true
+          },
+          files: [{
+             expand: true,
+             cwd: 'dist/',
+             src: '**/*.html',
+             dest: 'dist/'
+          }]
+       }
+    }
+    
+  });
+
+  // These plugins provide necessary tasks.
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-imagemin');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-htmlmin');
+  grunt.loadNpmTasks('grunt-processhtml');
+  grunt.loadNpmTasks('grunt-postcss');
+
+  // Default task.
+  grunt.registerTask('default', ['concat', 'uglify', 'imagemin', 'processhtml', 'htmlmin', 'cssmin', 'postcss']);
+
+};
