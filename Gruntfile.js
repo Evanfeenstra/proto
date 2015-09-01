@@ -43,6 +43,16 @@ module.exports = function(grunt) {
         }]
       }
     },
+    sass: {                              // Task
+      dist: {                            // Target
+        options: {                       // Target options
+          style: 'expanded'
+        },
+        files: {                         // Dictionary of files
+          'src/css/style.css': ['src/css/**/*.scss']      // 'destination': 'source'
+        }
+      }
+    },
     cssmin: {
        dist: {
           options: {
@@ -103,12 +113,16 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-imagemin');
+  grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-processhtml');
   grunt.loadNpmTasks('grunt-postcss');
 
   // Default task.
-  grunt.registerTask('default', ['concat', 'uglify', 'imagemin', 'processhtml', 'htmlmin', 'cssmin', 'postcss']);
+  grunt.registerTask('default', ['concat', 'uglify', 'imagemin', 'processhtml', 'htmlmin', 'sass', 'cssmin', 'postcss']);
 
 };
+
+
+
